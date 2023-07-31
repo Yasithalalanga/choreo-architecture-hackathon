@@ -48,8 +48,8 @@ service /visit on httpListener {
         self.db = check new ();
     }
 
-    resource function get scheduledVisits(@http:Header{name: "X-JWT-Assertion"} string jwtHeader) returns InternalServerErrorString|ScheduledVisit[] {
-        log:printInfo("JWT", header = jwtHeader);
+    resource function get scheduledVisits() returns InternalServerErrorString|ScheduledVisit[] {
+        // log:printInfo("JWT", header = jwtHeader);
         stream<ScheduledVisitEntity, error?> scheduledVisitStream = self.db->/scheduledvisits;
         ScheduledVisit[]|error visits =
             from var {visitData} in scheduledVisitStream
