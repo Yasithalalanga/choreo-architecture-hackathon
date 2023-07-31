@@ -2,7 +2,7 @@ version: 0.1
 
 endpoints:
   - name: OwnerAPI
-    port: 8080
+    port: 8081
     # Allowed values: REST, GraphQL, GRPC
     type: REST
     # Accepted values: Project|Organization|Public.
