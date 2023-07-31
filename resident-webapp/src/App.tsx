@@ -1,5 +1,5 @@
-import './App.css';
-import { useState } from 'react';
+import "./App.css";
+import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, useAuthContext } from "@asgardeo/auth-react";
 import { TokenExchangePlugin } from "@asgardeo/token-exchange-plugin";
@@ -8,39 +8,33 @@ import Dashboard from "./pages/Dashboard";
 import ScheduleFormPage from "./pages/ScheduleFormPage";
 
 import NoPage from "./pages/NoPage";
-import Login from './pages/Login';
-import ViewActualVisit from './pages/ViewActualVisit';
+import Login from "./pages/Login";
+import ViewActualVisit from "./pages/ViewActualVisit";
 
 const authConfig = {
-    "baseUrl": "https://api.asgardeo.io/t/architecturemindmeld",
-    "clientID": "nzsVQ5DJMfS8530VnrhJufYXTJMa",
-    "scope": [
-        "openid",
-        "profile",
-        "houseno",
-        "urn:architecturemindmeld:visitservicevisit420:resident"
-    ],
-    "signInRedirectURL": "https://" + window.location.host,
-    "signOutRedirectURL": "https://" + window.location.host
-}
+  baseUrl: window.config.asgardeoBaseURL,
+  clientID: window.config.clientId,
+  scope: window.config.appScopes,
+  signInRedirectURL: "https://" + window.location.host,
+  signOutRedirectURL: "https://" + window.location.host,
+};
 
 function App() {
-
-    return (
-        <AuthProvider config={authConfig}>
-            <BrowserRouter basename="/">
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/" element={<Layout />}>
-                        <Route index element={<Dashboard />} />
-                        <Route path="/schedule" element={<ScheduleFormPage />} />
-                        <Route path="/visit/actual/:id" element={<ViewActualVisit />} />
-                        <Route path="*" element={<NoPage />} />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-        </AuthProvider>
-    );
+  return (
+    <AuthProvider config={authConfig}>
+      <BrowserRouter basename="/">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="/schedule" element={<ScheduleFormPage />} />
+            <Route path="/visit/actual/:id" element={<ViewActualVisit />} />
+            <Route path="*" element={<NoPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
 export default App;
