@@ -84,7 +84,18 @@ const App = () => {
   }, []);
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+     <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          // Add the background image URL or import it and use as a URL value
+          backgroundImage: `url('https://images.unsplash.com/photo-1521137874331-ddb581452091?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1035&q=80')`, // Replace 'path/to/your/image.jpg' with the actual path to your image
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
         <BrowserRouter>
           <div style={{ flex: 1 }}>
             <WebAppNav />

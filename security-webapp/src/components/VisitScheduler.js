@@ -46,7 +46,7 @@ const VisitScheduler = ({ onScheduleVisit }) => {
         "Access-Control-Allow-Origin": "*,http://localhost:3000"
       },
       method: "POST",
-      url: window.config.resourceServerURL + '/actualVisits',
+      url: window.config.scheduledVisitURL + '/actualVisits',
       data: formData,
       withCredentials: false
     };
@@ -64,20 +64,6 @@ const VisitScheduler = ({ onScheduleVisit }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    //if the input field name is visitDate
-    // if (name === "visitDate") {
-    //   var formattedValue = value + ":00.00Z";
-    //   setFormData({
-    //     ...formData,
-    //     [name]: formattedValue,
-    //   });
-    // } else {
-    //   setFormData({
-    //     ...formData,
-    //     [name]: value,
-    //   });
-    // }
-
     setFormData({
       ...formData,
       [name]: value,
@@ -88,6 +74,43 @@ const VisitScheduler = ({ onScheduleVisit }) => {
     setShowModal(false);
   };
 
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedSearchType, setSelectedSearchType] = useState("NAME"); // Add this state
+  const [searchTerm, setSearchTerm] = useState(""); // Add this state
+
+  const handleSearch = async (searchType, searchTerm) => {
+    try {
+      await searchResidents(searchType, searchTerm);
+    } catch (error) {
+      console.error(error);
+      setSearchResults([]);
+    }
+  };
+
+  const searchResidents = async (searchType, searchTerm) => {
+    const requestConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      },
+      method: "GET",
+      url: window.config.residentsURL + '/residents/search?searchField=' + searchType + '&value=' + searchTerm,
+      withCredentials: false
+    };
+
+    var houseHolds = [];
+    await httpRequest(requestConfig)
+      .then((response) => {
+        console.log(response);
+        houseHolds = response.data;
+        setSearchResults(houseHolds);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+};
+
   return (
     <Container style={{ marginTop: '2rem' }}>
       <Modal
@@ -95,12 +118,60 @@ const VisitScheduler = ({ onScheduleVisit }) => {
         onClose={closeModal}
         trigger={
           <Button primary onClick={scheduleVisit} size="huge">
-            Schedule a new Visit
+            Enter a new Visit
           </Button>
         }
       >
         <Modal.Header>Enter a New Visit</Modal.Header>
         <Modal.Content>
+        <Form>
+          <Form.Field>
+            <label>Search by</label>
+            <select
+              value={selectedSearchType}
+              onChange={(e) => setSelectedSearchType(e.target.value)}
+            >
+              <option value="HOUSE_NO">House Number</option>
+              <option value="NAME">Name</option>
+              <option value="NIC">NIC</option>
+              <option value="PHONE_NO">Phone Number</option>
+              <option value="EMAIL">Email</option>
+            </select>
+          </Form.Field>
+          <Form.Field>
+            <label>Search Term</label>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </Form.Field>
+          <Button secondary onClick={() => handleSearch(selectedSearchType, searchTerm)}>
+            Search
+          </Button>
+          </Form>
+          {searchResults?.length > 0 && (
+            <div>
+              <h3>Select Resident from below matches</h3>
+              <ul>
+                {searchResults.map((result) => (
+                  <li
+                    key={result.houseNo}
+                    onClick={() => {
+                      setSelectedItem(result);
+                      setFormData({ ...formData, houseNo: result.houseNo });
+                      setSearchResults([]);
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {result.houseNo} - {result.name} - {result.nic} - {result.phoneNo} - {result.email}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <br />
+          <br />
           <Form onSubmit={handleSubmit}>
             <Form.Field>
               <label>House ID</label>
