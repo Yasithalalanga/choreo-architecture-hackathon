@@ -52,7 +52,6 @@ type VisitSvcResponse record {|
 
 sheets:Client spreadsheetClient = check new (spreadsheetConfig);
 
-
 public function insertVisit(VisitSvcResponse visit) {
     error? append = spreadsheetClient->appendRowToSheet(spreadsheetId, sheetName,
     [visit.visitDate, visit.inTime, visit.outTime, visit.houseNo, visit.visitorName, visit.visitorNIC, visit.vehicleNumber, visit.visitorPhoneNo, visit.comment]);
@@ -64,12 +63,12 @@ public function main() {
     error? append = spreadsheetClient->appendRowToSheet(spreadsheetId, sheetName,
     ["Date", "In Time", "Out Time", "House", "Visitor Name", "Visitor NIC", "Vehicle Number", "Visitor Phone", "Comment"]);
 
-
     http:Client|error visitClient = new (visitStatAPIUrl,
         auth = {
             tokenUrl: visitStatAPITokenURL,
             clientId: visitStatAPIConsumerKey,
-            clientSecret: visitStatAPIConsumerSecret
+            clientSecret: visitStatAPIConsumerSecret,
+            scopes: "urn:choreoplayground:yasithavisitapivisit420:resident"
         }
     );
     if visitClient is error {
