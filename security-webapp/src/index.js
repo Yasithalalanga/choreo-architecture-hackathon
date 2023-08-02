@@ -15,7 +15,7 @@ root.render(
         clientID: window.config.clientId,
         baseUrl: window.config.asgardeoBaseURL,
         scope: window.config.appScopes.split(' '),
-        resourceServerURLs: [window.config.resourceServerURL],
+        resourceServerURLs: [window.config.residentsURL, window.config.scheduledVisitURL],
       }}
     > 
      <App />
