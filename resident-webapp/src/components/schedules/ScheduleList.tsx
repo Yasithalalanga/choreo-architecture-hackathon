@@ -46,7 +46,7 @@ export default function ScheduleList() {
   }, []);
 
     useEffect(() => {
-        if (visits === undefined) {
+    if (visits === undefined && houseNo !== undefined) {
             getVisits();
         }
   }, [visits, houseNo]);
