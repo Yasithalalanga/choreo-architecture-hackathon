@@ -15,13 +15,15 @@ import { ScheduleVisit } from "../../types/domain"
 
 export default function ScheduleList() {
     const [visits, setVisits] = useState<ScheduleVisit[] | undefined>(undefined);
-    const { getAccessToken } = useAuthContext();
-
+  const [houseNo, setHouseNo] = useState<string | undefined>(undefined);
+  const { getAccessToken, getDecodedIDToken } = useAuthContext();
 
     async function getVisits() {
         const accessToken = await getAccessToken();
         console.log(accessToken);
-        let url: string = '/scheduledVisits';
+
+    let url: string = `/scheduledVisits/search?searchField=HOUSE_NO&value=${houseNo}`;
+
         API.get(url, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -35,12 +37,19 @@ export default function ScheduleList() {
                 console.log(error);
             });
     }
+  useEffect(() => {
+    getDecodedIDToken()
+      .then((decodedIDToken) => {
+        setHouseNo(decodedIDToken.houseno);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
     useEffect(() => {
         if (visits === undefined) {
             getVisits();
         }
-    }, [visits]);
+  }, [visits, houseNo]);
 
     return (
         <Box sx={{ width: '100%' }}>
