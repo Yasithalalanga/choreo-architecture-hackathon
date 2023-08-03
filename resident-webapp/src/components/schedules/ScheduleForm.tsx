@@ -75,10 +75,12 @@ export default function ScheduleForm() {
     };
 
     useEffect(() => {
-        getDecodedIDToken().then((decodedIDToken) => {
-            setValues({ ...values, houseNo: decodedIDToken.house_no });
+    getDecodedIDToken()
+      .then((decodedIDToken) => {
+        setValues({ ...values, houseNo: decodedIDToken.houseno });
+        console.log(decodedIDToken);
         })
-            .catch(err => console.error(err))
+      .catch((err) => console.error(err));
     }, []);
 
     return (

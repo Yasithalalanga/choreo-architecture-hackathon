@@ -18,7 +18,6 @@ const authConfig = {
     "openid",
     "profile",
     "urn:choreoplayground:yasithavisitapivisit420:resident",
-    "urn:choreoplayground:yasithavisitapivisit420:security",
   ],
   signInRedirectURL: "https://" + window.location.host,
   signOutRedirectURL: "https://" + window.location.host,
